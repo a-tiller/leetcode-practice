@@ -1,17 +1,16 @@
 var removeDuplicates = function(nums) {
-  for (let i = nums.length - 1; nums[i] >= nums[i - 1]; i = nums.length - 1) {
-    const lastEl = nums.pop();
+  if (nums.length <= 1) {
+    return nums.length;
+  }
 
-    if (lastEl !== nums[0]) {
-      nums.unshift(lastEl);
+  let n = 0;
+
+  for (let i = 1; i < nums.length; i++) {
+    if (nums[i] !== nums[n]) {
+      n++;
+      nums[n] = nums[i];
     }
   }
 
-  const lastEl = nums.pop();
-
-  if (lastEl !== nums[0]) {
-    nums.unshift(lastEl);
-  }
-
-  return nums.length;
+  return n + 1;
 };
