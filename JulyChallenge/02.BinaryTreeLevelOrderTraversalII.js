@@ -13,7 +13,7 @@
 var levelOrderBottom = function(root) {
   const result = [];
 
-  const breadthFirst = (node, depth) => {
+  const walk = (node, depth) => {
     if (node === null) {
       return;
     }
@@ -23,11 +23,11 @@ var levelOrderBottom = function(root) {
     }
 
     result[depth].push(node.val);
-    breadthFirst(node.left, depth + 1);
-    breadthFirst(node.right, depth + 1);
+    walk(node.left, depth + 1);
+    walk(node.right, depth + 1);
   }
 
-  breadthFirst(root, 0);
+  walk(root, 0);
 
   return result.reverse();
 };
