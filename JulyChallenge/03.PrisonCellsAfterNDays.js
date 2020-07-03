@@ -22,8 +22,10 @@ var prisonAfterNDays = function(cells, N) {
   const cycle = [nextDay(cells)];
   let current = nextDay(cycle[0]);
 
+  const stopper = cycle[0].join('');
 
-  while (current.join('') !== cycle[0].join('')) {
+
+  while (current.join('') !== stopper) {
     cycle.push(current);
     current = nextDay(current);
   }
