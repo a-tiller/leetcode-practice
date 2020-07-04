@@ -1,19 +1,35 @@
 var nthUglyNumber = function(n) {
   const sortedUglies = [];
-  const bigArray = [1];
-  let position = 0;
+  const byTwos = [];
+  const byThrees = [];
+  const byFives = [];
+  let current = 1;
 
   while (sortedUglies.length < n) {
-    let m = bigArray[position];
-    if (m !== undefined) {
-      sortedUglies.push(m);
-      bigArray[m * 2] = m * 2;
-      bigArray[m * 3] = m * 3;
-      bigArray[m * 5] = m * 5;
+
+    sortedUglies.push(current)
+    byTwos.push(current * 2);
+    byThrees.push(current * 3);
+    byFives.push(current * 5);
+
+    const min = Math.min(byTwos[0], byThrees[0], byFives[0])
+
+    if (byTwos[0] === min) {
+      current = byTwos.shift();
     }
 
-    position++;
+    if (byThrees[0] === min) {
+      current = byThrees.shift();
+    }
+
+    if (byFives[0] === min) {
+      current = byFives.shift();
+    }
   }
+
+  console.log(sortedUglies)
 
   return sortedUglies[n - 1];
 };
+
+console.log(nthUglyNumber(100));
