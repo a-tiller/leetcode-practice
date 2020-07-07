@@ -8,9 +8,9 @@ var islandPerimeter = function(grid) {
 
   const width = grid[0].length;
 
-  const checkUp = (grid, x, y) => {
-    if (x - 1 >= 0) {
-      if (grid[x - 1][y]) {
+  const checkUp = (grid, row, col) => {
+    if (row - 1 >= 0) {
+      if (grid[row - 1][col]) {
         return 0;
       }
     }
@@ -18,9 +18,9 @@ var islandPerimeter = function(grid) {
     return 1;
   };
 
-  const checkDown = (grid, x, y) => {
-    if (x + 1 < height) {
-      if (grid[x + 1][y]) {
+  const checkDown = (grid, row, col) => {
+    if (row + 1 < height) {
+      if (grid[row + 1][col]) {
         return 0;
       }
     }
@@ -28,9 +28,9 @@ var islandPerimeter = function(grid) {
     return 1;
   };
 
-  const checkLeft = (grid, x, y) => {
-    if (y - 1 >= 0) {
-      if (grid[x][y - 1]) {
+  const checkLeft = (grid, row, col) => {
+    if (col - 1 >= 0) {
+      if (grid[row][col - 1]) {
         return 0;
       }
     }
@@ -38,9 +38,9 @@ var islandPerimeter = function(grid) {
     return 1;
   }
 
-  const checkRight = (grid, x, y) => {
-    if (y + 1 < width) {
-      if (grid[x][y + 1]) {
+  const checkRight = (grid, row, col) => {
+    if (col + 1 < width) {
+      if (grid[row][col + 1]) {
         return 0;
       }
     }
@@ -55,8 +55,6 @@ var islandPerimeter = function(grid) {
       }
     }
   }
-
-
 
   return perimeter;
 };
