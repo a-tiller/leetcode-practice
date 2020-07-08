@@ -5,35 +5,35 @@ var threeSum = function(nums) {
     return triples;
   }
 
-  const counts = new Map();
-
   const sorted = [...nums].sort((a,b) => (a - b));
 
-  for (let i = 0; i < sorted.length; i++) {
-    const digit = sorted[i]
-    if (counts.has(digit)) {
-      counts.set(digit, counts.get(digit) + 1);
-    } else {
-      counts.set(digit, 1);
-    }
-  }
+  for (let i = 0; sorted[i] <= 0 && i < sorted.length - 2; i++) {
+    let start = i + 1
+    let end = sorted.length - 1;
 
-  for (let [firstKey, firstVal] of counts) {
-    if (firstKey > 0) continue;
+    while (start < end) {
+      const sum = sorted[i] + sorted[start] + sorted[end];
 
-    counts.set(firstKey, firstVal - 1);
-    for (let [secondKey, secondVal] of counts) {
-      if (secondKey >= firstKey && secondVal > 0) {
-        counts.set(secondKey, secondVal - 1);
-        const sum = firstKey + secondKey;
-
-        if (counts.has(-sum) && counts.get(-sum) > 0 && -sum >= secondKey) {
-          triples.push([firstKey, secondKey, -sum]);
+      if (sum === 0) {
+        triples.push([sorted[i], sorted[start], sorted[end]]);
+        while (sorted[start] === sorted[start + 1]) {
+          start++;
         }
-        counts.set(secondKey, secondVal);
+        start++;
+      }
+
+      if (sum > 0) {
+        end--;
+      }
+
+      if (sum < 0) {
+        start++;
       }
     }
-    counts.set(firstKey, firstVal);
+
+    while (sorted[i] === sorted[i + 1]) {
+      i++;
+    }
   }
 
   return triples;
