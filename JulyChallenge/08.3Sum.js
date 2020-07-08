@@ -1,40 +1,40 @@
 var threeSum = function(nums) {
-  if (nums.length < 3) {
-    return [];
-  }
-
   const triples = [];
 
-  const check = (matrix, array) => {
-    for (let i = 0; i < matrix.length; i++) {
-      const member = matrix[i];
-      let matchCount = 0;
-      for (let j = 0; j < 3; j++) {
-        if (member[j] === array[j]) {
-          matchCount++;
-        } else {
-          break;
-        }
-      }
-      if (matchCount === 3) {
-        return true;
-      }
-    }
-
-    return false;
+  if (nums.length < 3) {
+    return triples;
   }
 
-  for (let i = 0; i < nums.length - 2; i++) {
-    for (let j = i + 1; j < nums.length - 1; j++) {
-      for (let k = j + 1; k < nums.length; k++) {
-        if (nums[i] + nums[j] + nums[k] === 0) {
-          const candidate = [nums[i], nums[j], nums[k]].sort();
-          if (!check(triples, candidate)) {
-            triples.push(candidate);
-          }
-        }
-      }
+  const counts = new Map();
+
+  const sorted = [...nums].sort((a,b) => (a - b));
+
+  for (let i = 0; i < sorted.length; i++) {
+    const digit = sorted[i]
+    if (counts.has(digit)) {
+      counts.set(digit, counts.get(digit) + 1);
+    } else {
+      counts.set(digit, 1);
     }
   }
+
+  for (let [firstKey, firstVal] of counts) {
+    if (firstKey > 0) continue;
+
+    counts.set(firstKey, firstVal - 1);
+    for (let [secondKey, secondVal] of counts) {
+      if (secondKey >= firstKey && secondVal > 0) {
+        counts.set(secondKey, secondVal - 1);
+        const sum = firstKey + secondKey;
+
+        if (counts.has(-sum) && counts.get(-sum) > 0 && -sum >= secondKey) {
+          triples.push([firstKey, secondKey, -sum]);
+        }
+        counts.set(secondKey, secondVal);
+      }
+    }
+    counts.set(firstKey, firstVal);
+  }
+
   return triples;
 };
