@@ -1,50 +1,43 @@
 var widthOfBinaryTree = function(root) {
-  const rows = [[root]];
-  let keepGoing = true;
-  let width = 0;
+  let maxWidth = 0;
 
-  const trimRow = function(row) {
-    while (row[0] === null) {
-      row.shift();
-    }
+  if (!root) {
+    return maxWidth;
+  }
 
-    while (row[row.length - 1] === null) {
-      row.pop();
-    }
-  };
+  let queue = [{node: root, pos: 1}];
 
-  while (keepGoing) {
-    keepGoing = false;
+  while (queue.length > 0) {
+    const oldLength = queue.length;
+    const maxPos = queue[oldLength - 1].pos;
+    const minPos  = queue[0].pos;
 
-    const oldRow = rows[rows.length - 1];
-    const newRow = [];
-    let speculativeCount = 0;
-    let committedCount = 0;
+    const rowWidth =  maxPos - minPos + 1;
+    maxWidth = Math.max(maxWidth, rowWidth);
 
-    for (let i = 0; i < oldRow.length; i++) {
-      const value = oldRow[i];
-      if (value === null) {
-        speculativeCount++;
-        newRow.push(null);
-        newRow.push(null)
-      } else {
-        keepGoing = true;
-        speculativeCount++;
-        committedCount = speculativeCount;
-        newRow.push(value.left);
-        newRow.push(value.right);
+    queue.map((queued) => {
+      queued.pos = queued.pos - minPos + 1;
+      return queued;
+    });
+
+    for (let i = 0; i < oldLength; i++) {
+      const { node, pos } = queue.shift();
+
+      if (node.left !== null) {
+        queue.push({
+          node: node.left,
+          pos: pos * 2 - 1
+        });
       }
-    }
 
-    rows.pop(); // remove previous rows to prevent out of memory errors
-    trimRow(newRow); // remove leading and trailing nulls to prevent out of memory errors
-    rows.push(newRow);
-
-    if (committedCount > width) {
-      width = committedCount;
+      if (node.right !== null) {
+        queue.push({
+          node: node.right,
+          pos: pos * 2
+        });
+      }
     }
   }
 
-  return width;
+  return maxWidth;
 };
-
