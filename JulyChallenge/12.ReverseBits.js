@@ -1,8 +1,13 @@
 var reverseBits = function(n) {
-  let binaryString = n.toString(2);
-  let shifts = 32 - binaryString.length;
+  let result = 0;
+  let count = 32;
 
-  let unShifted = parseInt(binaryString.split('').reverse().join(''), 2);
+  while (count > 0) {
+    result <<= 1;
+    result += n & 1;
+    n >>= 1;
+    count--;
+  }
 
-  return (unShifted << shifts) >>> 0;
+  return result >>> 0;
 };
