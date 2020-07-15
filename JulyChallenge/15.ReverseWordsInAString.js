@@ -1,11 +1,29 @@
 var reverseWords = function(s) {
-  return s.split(' ').reverse().reduce((a, v) => {
-    if (v.length > 0) {
-      if (a.length > 0) {
-        return a + ' ' + v;
-      }
-      return v;
+  let wordBuilder = '';
+  let wordArray = [];
+  let position = 0;
+  let stringBuilder = '';
+
+  while (position < s.length) {
+    if (s[position] !== ' ') {
+      wordBuilder += s[position];
     }
-    return a;
-  }, '');
+    if (s[position] === ' ' || position + 1 === s.length) {
+      if (wordBuilder.length) {
+        wordArray.push(wordBuilder);
+        wordBuilder = '';
+      }
+    }
+    position++;
+  }
+
+  for (let i = wordArray.length - 1; i >= 0; i--) {
+    if (i > 0) {
+      stringBuilder += wordArray[i] + ' ';
+    } else {
+      stringBuilder += wordArray[i];
+    }
+  }
+
+  return stringBuilder;
 };
