@@ -7,10 +7,12 @@ var myPow = function(x, n) {
   }
 
   let total = 1;
+  let base = x;
 
   while (n > 0) {
-    total *= x;
-    n--;
+    if (n & 1) total *= base;
+    n >>>= 1;
+    base *= base
   }
 
   return total;
