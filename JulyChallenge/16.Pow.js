@@ -6,5 +6,12 @@ var myPow = function(x, n) {
     n *= -1;
   }
 
-  return x *=  myPow(x, n - 1);
+  let total = 1;
+
+  while (n > 0) {
+    total *= x;
+    n--;
+  }
+
+  return total;
 };
