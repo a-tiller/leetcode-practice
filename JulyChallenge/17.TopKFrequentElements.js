@@ -10,15 +10,19 @@ var topKFrequent = function(nums, k) {
     }
   }
 
-  let countArray = [...counts];
+  const buckets = new Array(nums.length + 1).fill(0).map(() => []);
 
-  countArray.sort((a, b) => (b[1] - a[1]));
+  counts.forEach((count, num) => { buckets[count].push(num) });
 
   const results = [];
+  let counter = buckets.length - 1;
 
-  for (let j = 0; j < k; j++) {
-    results.push(countArray[j][0]);
+  while (results.length < k) {
+    if (buckets[counter].length > 0) {
+      results.push(...buckets[counter]);
+    }
+    counter--;
   }
 
-  return results;
+  return results.slice(0, k);
 };
