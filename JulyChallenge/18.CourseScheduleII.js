@@ -6,11 +6,10 @@ var findOrder = function(numCourses, prerequisites) {
   prerequisites.forEach(([c, p]) => {
     reqCounts[c]++;
 
-    if (reqs.has(c)) {
-      reqs.get(c).add(p);
+    if (reqs.has(p)) {
+      reqs.get(p).push(c);
     } else {
-      const prereq = new Set([p]);
-      reqs.set(c, prereq);
+      reqs.set(p, [c]);
     }
   });
 
@@ -21,7 +20,6 @@ var findOrder = function(numCourses, prerequisites) {
     reqCounts.forEach((count, course) => {
       if (count === 0) {
         queue.push(course);
-        reqCounts[course]--;
       }
     });
   };
@@ -33,13 +31,16 @@ var findOrder = function(numCourses, prerequisites) {
 
     path.push(current);
 
-    reqs.forEach((r, c) => {
-      if (r.has(current)) {
-        reqCounts[c]--;
-      }
-    });
+    if (reqs.has(current)) {
+      const unlock = reqs.get(current);
 
-    enqueue();
+      unlock.forEach(course => {
+        reqCounts[course]--;
+        if (reqCounts[course] === 0) {
+          queue.push(course);
+        }
+      })
+    }
   }
 
   if (path.length === numCourses) {
