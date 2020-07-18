@@ -1,48 +1,50 @@
 var findOrder = function(numCourses, prerequisites) {
-  let stack = [];
+  const reqCounts = new Array(numCourses).fill(0);
 
-  const allCourses = new Array(numCourses).fill(true);
+  const reqs = new Map();
 
-  const next = function(path = [], remain = allCourses, prereqs = prerequisites) {
-    for (let i = 0; i < remain.length; i++) {
-      if (remain[i]) {
-        if (checkPrereq(i, path, prereqs)) {
-          const rest = [...remain];
-          rest[i] = false;
-          stack.push([path.concat([i]), rest])
-        }
-      }
+  prerequisites.forEach(([c, p]) => {
+    reqCounts[c]++;
+
+    if (reqs.has(c)) {
+      reqs.get(c).add(p);
+    } else {
+      const prereq = new Set([p]);
+      reqs.set(c, prereq);
     }
+  });
+
+  const path = [];
+  const queue = [];
+
+  const enqueue = () => {
+    reqCounts.forEach((count, course) => {
+      if (count === 0) {
+        queue.push(course);
+        reqCounts[course]--;
+      }
+    });
   };
 
-  const checkPrereq = function(num, path, prereqs) {
-    const required = [];
+  enqueue();
 
-    prereqs.forEach(([n, r]) => {
-      if (n === num) required.push(r);
+  while (queue.length > 0) {
+    const current = queue.shift();
+
+    path.push(current);
+
+    reqs.forEach((r, c) => {
+      if (r.has(current)) {
+        reqCounts[c]--;
+      }
     });
 
-    for (let i = 0; i < required.length; i++) {
-      if (path.indexOf(required[i]) === -1) {
-        return false;
-      }
-    }
-
-    return true;
+    enqueue();
   }
 
-  next();
-
-  while(stack.length) {
-    let [currentPath, currentRemaining] = stack.pop();
-
-    if (currentPath.length === numCourses) {
-      return currentPath;
-    }
-
-    next(currentPath, currentRemaining);
+  if (path.length === numCourses) {
+    return path;
   }
 
   return [];
-
 };
