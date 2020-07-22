@@ -3,29 +3,28 @@ var zigzagLevelOrder = function(root) {
 
   const result = [];
 
-  let nodes = [root];
+  const queue = [root];
   let ltr = true;
 
-  while (nodes.length) {
-    const levelWidth = nodes.length;
-    const children = [];
+  while (queue.length) {
+    const width = queue.length;
     const level = [];
 
-    for (let i = 0; i < levelWidth; i++) {
-      const current = nodes.pop();
-      level.push(current.val);
+    for (let i = 0; i < width; i++) {
+      const { val, left, right } = queue.shift();
+
       if (ltr) {
-        if (current.left) children.push(current.left);
-        if (current.right) children.push(current.right);
+        level.push(val);
       } else {
-        if (current.right) children.push(current.right);
-        if (current.left) children.push(current.left);
+        level.unshift(val);
       }
+
+      if (left) queue.push(left);
+      if (right) queue.push(right);
     }
 
     result.push(level);
     ltr = !ltr;
-    nodes = children;
   }
 
   return result;
