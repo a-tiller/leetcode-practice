@@ -1,45 +1,31 @@
 var zigzagLevelOrder = function(root) {
   if (!root) return [];
 
+  const result = [];
+
+  let nodes = [root];
   let ltr = true;
 
-  let ltrQueue = [root];
-  let rtlQueue = [];
+  while (nodes.length) {
+    const levelWidth = nodes.length;
+    const children = [];
+    const level = [];
 
-  const result = [];
-  let level = [];
-  let current = null;
-
-  while (ltrQueue.length > 0 || rtlQueue.length > 0) {
-    if (ltr) {
-      current = ltrQueue.pop()
-      level.push(current.val)
-      if (current.left !== null) {
-        rtlQueue.push(current.left)
-      }
-      if (current.right !== null) {
-        rtlQueue.push(current.right)
-      }
-      if (ltrQueue.length === 0) {
-        result.push(level);
-        level = [];
-        ltr = false;
-      }
-    } else {
-      current = rtlQueue.pop()
-      level.push(current.val)
-      if (current.right !== null) {
-        ltrQueue.push(current.right)
-      }
-      if (current.left !== null) {
-        ltrQueue.push(current.left)
-      }
-      if (rtlQueue.length === 0) {
-        result.push(level);
-        level = [];
-        ltr = true;
+    for (let i = 0; i < levelWidth; i++) {
+      const current = nodes.pop();
+      level.push(current.val);
+      if (ltr) {
+        if (current.left) children.push(current.left);
+        if (current.right) children.push(current.right);
+      } else {
+        if (current.right) children.push(current.right);
+        if (current.left) children.push(current.left);
       }
     }
+
+    result.push(level);
+    ltr = !ltr;
+    nodes = children;
   }
 
   return result;
