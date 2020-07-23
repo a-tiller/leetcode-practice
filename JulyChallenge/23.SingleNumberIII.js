@@ -1,11 +1,9 @@
 var singleNumber = function(nums) {
-  const numHash = new Set ();
+  const xyDiff = nums.reduce((a, v) => (a ^ v));
 
-  nums.forEach((num) => {
-    if (!numHash.delete(num)) {
-      numHash.add(num);
-    }
-  });
+  const bit = xyDiff & ~(xyDiff - 1);
 
-  return [...numHash];
+  const x = nums.reduce((a, v) => (v & bit ? a ^ v : a), 0);
+
+  return [x, x ^ xyDiff];
 };
