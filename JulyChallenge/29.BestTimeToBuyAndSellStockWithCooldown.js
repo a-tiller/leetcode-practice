@@ -1,18 +1,18 @@
 var maxProfit = function(prices) {
-  const length = prices.length;
-  if (length === 0) return 0;
+  if (prices.length < 2) return 0;
 
-  let ready = [0];
-  let hold = [-prices[0]]
-  let cooldown = [null]
+  let ready = 0;
+  let hold = -prices[0]
+  let cooldown = 0
 
   for (let i = 1; i < prices.length; i++) {
-    ready.push(Math.max(cooldown[i - 1], ready[i - 1]));
-    hold.push(Math.max(hold[i - 1], ready[i - 1] - prices[i]));
-    cooldown.push(hold[i - 1] + prices[i]);
+    let prevCD = cooldown;
+    cooldown = hold + prices[i];
+    hold = Math.max(hold, ready - prices[i]);
+    ready= Math.max(prevCD, ready);
   }
 
-  return Math.max(ready[length - 1], cooldown[length - 1]);
+  return Math.max(ready, cooldown);
 };
 
 // console.log(maxProfit([1,2,3,0,2])) // 3
