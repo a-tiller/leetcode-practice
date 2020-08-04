@@ -1,21 +1,16 @@
 var isPowerOfFour = function(num) {
+  if (num & (num - 1)) return false
   if (num <= 0) return false
 
-  let n = num;
-  let counter = 0
+  const MASK = 0xAAAAAAAA >> 1
 
-  while (n > 1) {
-   n >>= 2
-   counter++
-  }
-
-  return num === Math.pow(4, counter)
+  return !!(num & MASK);
 };
 
-console.log(isPowerOfFour(1))
-console.log(isPowerOfFour(2))
-console.log(isPowerOfFour(3))
-console.log(isPowerOfFour(4))
-console.log(isPowerOfFour(8))
-console.log(isPowerOfFour(16))
-console.log(isPowerOfFour(17))
+// console.log(isPowerOfFour(1)) // true
+// console.log(isPowerOfFour(2)) // false
+// console.log(isPowerOfFour(3)) // false
+// console.log(isPowerOfFour(4)) // true
+// console.log(isPowerOfFour(8)) // false
+// console.log(isPowerOfFour(16)) // true
+// console.log(isPowerOfFour(17)) // false
