@@ -1,51 +1,42 @@
 var findOrder = function(numCourses, prerequisites) {
-  const reqCounts = new Array(numCourses).fill(0);
+  const visited = new Set();
+  const order = [];
 
-  const reqs = new Map();
+  const adjacency = new Array(numCourses).fill(0).map(() => []);
+  for (const edge of prerequisites) {
+    [course, prereq] = edge;
+    adjacency[course].push(prereq);
+  }
 
-  prerequisites.forEach(([c, p]) => {
-    reqCounts[c]++;
-
-    if (reqs.has(p)) {
-      reqs.get(p).push(c);
-    } else {
-      reqs.set(p, [c]);
+  const dfs = (node, visiting = new Set()) => {
+    if (visited.has(node)) {
+      return true;
     }
-  });
 
-  const path = [];
-  const queue = [];
+    let noCycle = true;
 
-  const enqueue = () => {
-    reqCounts.forEach((count, course) => {
-      if (count === 0) {
-        queue.push(course);
+    visiting.add(node);
+    adjacency[node].forEach(p => {
+      if (visiting.has(p)) {
+        noCycle = false;
+        return;
+      }
+      if (!dfs(p, visiting)) {
+        noCycle = false;
       }
     });
+    visited.add(node);
+    visiting.delete(node);
+    order.push(node);
+
+    return noCycle;
   };
 
-  enqueue();
-
-  while (queue.length > 0) {
-    const current = queue.shift();
-
-    path.push(current);
-
-    if (reqs.has(current)) {
-      const unlock = reqs.get(current);
-
-      unlock.forEach(course => {
-        reqCounts[course]--;
-        if (reqCounts[course] === 0) {
-          queue.push(course);
-        }
-      })
+  for (let i = 0; i < numCourses; i++) {
+    if (!dfs(i)) {
+      return []
     }
   }
 
-  if (path.length === numCourses) {
-    return path;
-  }
-
-  return [];
+  return order.length === numCourses ? order : [];
 };
