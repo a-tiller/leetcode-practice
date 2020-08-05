@@ -13,23 +13,24 @@ var findOrder = function(numCourses, prerequisites) {
       return true;
     }
 
-    let noCycle = true;
+    if (visiting.has(node)) {
+      return false
+    }
 
+    const p = adjacency[node];
     visiting.add(node);
-    adjacency[node].forEach(p => {
-      if (visiting.has(p)) {
-        noCycle = false;
-        return;
+
+    for (let i = 0; i < p.length; i++) {
+      if (!dfs(p[i], visiting)) {
+        return false;
       }
-      if (!dfs(p, visiting)) {
-        noCycle = false;
-      }
-    });
-    visited.add(node);
+    }
+
     visiting.delete(node);
+    visited.add(node);
     order.push(node);
 
-    return noCycle;
+    return true;
   };
 
   for (let i = 0; i < numCourses; i++) {
@@ -38,5 +39,5 @@ var findOrder = function(numCourses, prerequisites) {
     }
   }
 
-  return order.length === numCourses ? order : [];
+  return order;
 };
