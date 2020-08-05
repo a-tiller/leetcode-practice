@@ -1,9 +1,14 @@
 /**
  * Initialize your data structure here.
  */
+
+var Trie = function() {
+  this.letters = new Map();
+  this.wordEnd = false;
+}
+
 var WordDictionary = function() {
-  this.memo = new Set();
-  this.searchable = new Map();
+  this.words = new Trie();
 };
 
 /**
@@ -12,14 +17,16 @@ var WordDictionary = function() {
  * @return {void}
  */
 WordDictionary.prototype.addWord = function(word) {
-  if (!this.memo.has(word)) {
-    this.memo.add(word);
-    if (this.searchable.has(word.length)) {
-      this.searchable.get(word.length).push(word)
-    } else {
-      this.searchable.set(word.length, [word]);
+  let current = this.words;
+
+  for (let i = 0; i < word.length; i++) {
+    if (!current.letters.has(word[i])) {
+      current.letters.set(word[i], new Trie());
     }
+    current = current.letters.get(word[i])
   }
+
+  current.wordEnd = true;
 };
 
 /**
@@ -28,35 +35,28 @@ WordDictionary.prototype.addWord = function(word) {
  * @return {boolean}
  */
 WordDictionary.prototype.search = function(word) {
-  if (this.memo.has(word)) {
-    return true;
-  }
-
-  if (this.searchable.has(word.length)) {
-    const wordBank = this.searchable.get(word.length)
-
-    let hasMatch = wordBank.reduce((match, w) => {
-      if (match) {
-        return true;
-      }
-
-      for (let i = 0; i < w.length; i++) {
-        if (word[i] === '.' || word[i] === w[i]) {
-          continue;
-        }
-        return false
-      }
-
-      return true;
-    }, false);
-
-    if (hasMatch) {
-      this.memo.add(word);
-      return true;
+  const dfs = (w, trie) => {
+    if (w.length === 0) {
+      return trie.wordEnd;
     }
+
+    if (w[0] === '.') {
+      let found = false;
+      trie.letters.forEach((t) => {
+        found = found || dfs(w.substring(1), t)
+      })
+
+      return found;
+    }
+
+    if (trie.letters.has(w[0])) {
+      return dfs(w.substring(1), trie.letters.get(w[0]));
+    }
+
+    return false;
   }
 
-  return false;
+  return dfs(word, this.words);
 };
 
 /**
