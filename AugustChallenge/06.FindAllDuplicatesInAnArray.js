@@ -1,13 +1,15 @@
 var findDuplicates = function(nums) {
-  const results = new Set(nums);
+  const results = [];
 
   for (let i = 0; i < nums.length; i++) {
-    if (!results.delete(nums[i])) {
-      results.add(nums[i]);
+    if (nums[Math.abs(nums[i]) - 1] < 0) {
+      results.push(Math.abs(nums[i]))
     }
+
+    nums[Math.abs(nums[i]) - 1] *= -1;
   }
 
-  return [...results];
+  return results;
 };
 
 let test;
