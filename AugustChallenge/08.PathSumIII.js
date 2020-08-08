@@ -2,26 +2,23 @@ var pathSum = function(root, sum) {
   if (!root)  return 0;
 
   counter = 0;
+  sumHash = {}
 
-  const dfs = function(node, prevsums = []) {
+  const dfs = function(node, current = 0) {
     if (!node) return;
 
-    let newSums = [...prevsums];
-    newSums.push(0);
-    newSums = newSums.map(oldSum => {
-      const newSum = oldSum + node.val;
-      if (newSum === sum) {
-        counter++;
-      }
-      return newSum;
-    });
+    current += node.val;
 
-    dfs(node.left, newSums);
-    dfs(node.right, newSums);
+    current === sum && counter++;
+    counter += ~~sumHash[current - sum];
+
+    sumHash.hasOwnProperty(current) ? sumHash[current] += 1 : sumHash[current] = 1;
+    dfs(node.left, current);
+    dfs(node.right, current);
+    sumHash[current] -= 1;
   }
 
   dfs(root);
 
   return counter;
 };
-
