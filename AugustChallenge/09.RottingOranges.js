@@ -17,39 +17,30 @@ var orangesRotting = function(grid) {
     }
   }
 
-  if (fresh.size === 0) {
-    return 0;
-  }
-
   const offsets = [[1, 0], [0, 1], [-1, 0], [0, -1]];
 
   const spread = function(r, c, s) {
-    return offsets.reduce((a, [rr, cc]) => {
+    offsets.forEach(([rr, cc]) => {
       const pos = [r + rr, c + cc];
-
       if (fresh.has(`${pos}`)) {
         fresh.delete(`${pos}`);
         s.push(pos);
-        return true;
       }
-
-      return false || a;
-    }, false);
+    });
   };
 
   let days = 0;
 
-  while (rot.length) {
+  while (rot.length && fresh.size !== 0) {
     const rotting = [];
-
-    let change = rot.reduce((a, [row, col]) => (spread(row, col, rotting) || a), false);
-
+    rot.forEach(([row, col]) => spread(row, col, rotting));
     rot = rotting;
-    change && days++;
+    days++;
   }
 
   return fresh.size ? -1 : days;
 };
+
 
 // let grid = [[]];
 // console.log(orangesRotting(grid)); // 0
