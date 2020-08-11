@@ -1,13 +1,17 @@
 var hIndex = function(citations) {
-  let working = [...citations];
+  const n = citations.length;
+  const buckets = new Array(n + 1).fill(0);
 
-  working.sort((a, b) => (a - b));
+  for (let i = 0; i < n; i++) {
+    const val = citations[i];
+    val > n ? buckets[n]++ : buckets[val]++;
+  }
 
-  for (let i = 0; i < working.length; i++) {
-    const h = working.length - i;
-    if (working[i] >= h) {
-      return h;
-    }
+  let papers = 0;
+  for (let j = n; j >= 0; j--) {
+    papers += buckets[j]
+
+    if (papers >= j) return j;
   }
 
   return 0;
