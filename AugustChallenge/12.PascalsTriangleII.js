@@ -1,12 +1,10 @@
 var getRow = function(rowIndex) {
   const row = [1]
-  let count = 0;
-  while (count < rowIndex) {
-    for (i = row.length - 1; i > 0; i--) {
-      row[i] = row[i] + row[i - 1];
+  for (let i = rowIndex; i > 0; i--) {
+    for (let j = row.length - 1; j > 0; j--) {
+      row[j] += row[j - 1];
     }
     row.push(1);
-    count++;
   }
   return row;
 };
