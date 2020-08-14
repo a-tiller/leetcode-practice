@@ -3,34 +3,37 @@
  * @param {number} combinationLength
  */
 var CombinationIterator = function(characters, combinationLength) {
-  this.store = [];
-  this.place = 0;
+  function* generateCombinations(prefix, firstAvailable) {
+    if (prefix.length === combinationLength) {
+      yield prefix;
+      return;
+    }
 
-  if (combinationLength === 1) {
-    this.store = characters.split('');
-  } else if (combinationLength > 1) {
-    for (let i = 0; i <= characters.length - combinationLength; i++){
-        const further = new CombinationIterator(characters.slice(i + 1), combinationLength - 1);
-        const candidates = further.store.map(combination => (characters[i] + combination));
-        this.store = this.store.concat(candidates);
+    for (let i = firstAvailable; i < characters.length - combinationLength + prefix.length + 1; i++) {
+      yield* generateCombinations(prefix + characters[i], i + 1);
     }
   }
+
+  this.iterator = generateCombinations('', 0);
+  this.current = this.iterator.next();
 };
 
 /**
  * @return {string}
  */
 CombinationIterator.prototype.next = function() {
-  const combination = this.store[this.place];
-  this.place++;
-  return combination;
+  const { value } = this.current;
+
+  this.current = this.iterator.next();
+
+  return value;
 };
 
 /**
  * @return {boolean}
  */
 CombinationIterator.prototype.hasNext = function() {
-  return this.place < this.store.length;
+  return this.current.done === false;
 };
 
 /**
