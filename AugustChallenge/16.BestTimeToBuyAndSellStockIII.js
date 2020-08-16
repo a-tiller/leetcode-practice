@@ -1,55 +1,25 @@
 var maxProfit = function(prices) {
-  if (prices.length < 2) return 0;
+  const len = prices.length;
+  if (len < 2) return 0;
 
-  const maxForRange = function(start, end) {
-    let mindex, maxdex, value = 0;
-    let currentMindex = 0;
-    let currentMin = Infinity;
-
-    for (let i = start; i < end; i++) {
-      let price = prices[i];
-
-      if (price < currentMin) {
-        currentMindex = i;
-        currentMin = price
-      } else if (price - currentMin > value) {
-        mindex = currentMindex;
-        maxdex = i;
-        value = price - currentMin;
-      }
-    }
-
-    return { mindex, maxdex, value };
+  const leftToRight = new Array(len).fill(0);
+  let minSeen = prices[0];
+  for (let i = 1; i < len; i++) {
+    const price = prices[i];
+    minSeen = Math.min(price, minSeen);
+    leftToRight[i] = Math.max(leftToRight[i - 1], price - minSeen);
   }
 
-  const splitTransaction = function(start, finish) {
-    const startPrice = prices[start];
-    const endPrice = prices[finish];
-    let peakSeen = 0;
-    let split = 0;
-
-    for (let i = start; i < finish; i++) {
-      let price = prices[i];
-
-      if (price > peakSeen) {
-        peakSeen = price;
-      } else {
-        const splitHere = (peakSeen - startPrice) + (endPrice - price);
-        if (splitHere > split) {
-          split = splitHere;
-        }
-      }
-    }
-
-    return split;
+  let profit = leftToRight[len - 1];
+  let maxSeen = prices[len - 1];
+  for (let i = len - 2; i > 0; i--) {
+    const price = prices[i];
+    maxSeen = Math.max(price, maxSeen);
+    const buyHere = maxSeen - price;
+    profit = Math.max(profit, leftToRight[i - 1] + buyHere);
   }
 
-  const bigTransaction = maxForRange(0, prices.length);
-
-  let sum = bigTransaction.value + Math.max(maxForRange(0, bigTransaction.mindex).value, maxForRange(bigTransaction.maxdex, prices.length).value);
-  let split = splitTransaction(bigTransaction.mindex, bigTransaction.maxdex);
-
-  return Math.max(sum, split);
+  return profit;
 };
 
 let test = []
