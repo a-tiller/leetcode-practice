@@ -1,25 +1,18 @@
 var maxProfit = function(prices) {
-  const len = prices.length;
-  if (len < 2) return 0;
+  let cost1 = Infinity;
+  let cost2 = Infinity;
+  let profit1 = 0;
+  let profit2 = 0;
 
-  const leftToRight = new Array(len).fill(0);
-  let minSeen = prices[0];
-  for (let i = 1; i < len; i++) {
+  for (let i = 0; i < prices.length; i++) {
     const price = prices[i];
-    minSeen = Math.min(price, minSeen);
-    leftToRight[i] = Math.max(leftToRight[i - 1], price - minSeen);
+    cost1 = Math.min(cost1, price);
+    profit1 = Math.max(profit1, price - cost1);
+    cost2 = Math.min(cost2, price - profit1);
+    profit2 = Math.max(profit2, price - cost2);
   }
 
-  let profit = leftToRight[len - 1];
-  let maxSeen = prices[len - 1];
-  for (let i = len - 2; i > 0; i--) {
-    const price = prices[i];
-    maxSeen = Math.max(price, maxSeen);
-    const buyHere = maxSeen - price;
-    profit = Math.max(profit, leftToRight[i - 1] + buyHere);
-  }
-
-  return profit;
+  return profit2;
 };
 
 let test = []
