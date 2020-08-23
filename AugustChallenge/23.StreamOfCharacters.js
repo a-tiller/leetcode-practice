@@ -1,6 +1,6 @@
 class Trie {
   constructor(){
-    this.letters = new Map();
+    this.letters = {};
     this.isWord = false;
   }
 
@@ -9,10 +9,10 @@ class Trie {
 
     for (let i = 0; i < word.length; i++) {
       const char = word[i];
-      if (!pointer.letters.has(char)) {
-        pointer.letters.set(char, new Trie());
+      if (!pointer.letters.hasOwnProperty(char)) {
+        pointer.letters[char] = new Trie();
       }
-      pointer = pointer.letters.get(char);
+      pointer = pointer.letters[char];
     }
     pointer.isWord = true;
   }
@@ -23,9 +23,13 @@ class Trie {
  */
 var StreamChecker = function(words) {
   this.dict = new Trie();
-  this.pointers = [];
+  this.stream = [];
+  this.depth = 0;
 
-  words.forEach((word) => (this.dict.add(word)));
+  words.forEach((word) => {
+    this.depth = Math.max(this.depth, word.length);
+    this.dict.add(word.split('').reverse().join(''))
+  });
 };
 
 /**
@@ -33,30 +37,19 @@ var StreamChecker = function(words) {
  * @return {boolean}
  */
 StreamChecker.prototype.query = function(letter) {
-  let result = false;
-  const newPointers = []
+  let current = this.dict;
 
-  this.pointers.forEach((pointer) => {
-    if (pointer.letters.has(letter)) {
-      pointer = pointer.letters.get(letter);
-      newPointers.push(pointer);
-      if (pointer.isWord) {
-        result = true;
-      }
-    }
-  });
+  this.stream.unshift(letter);
+  if (this.stream.length > this.depth) this.stream.pop();
 
-  if (this.dict.letters.has(letter)) {
-    const pointer = this.dict.letters.get(letter);
-    newPointers.push(pointer);
-    if (pointer.isWord) {
-      result = true;
+  for (let i = 0; i < this.depth; i++) {
+    const char = this.stream[i];
+    if (!current.letters.hasOwnProperty(char)) {
+      return false;
     }
+    current = current.letters[char];
+    if (current.isWord) return true;
   }
-
-  this.pointers = newPointers;
-
-  return result;
 };
 
 /**
@@ -65,16 +58,16 @@ StreamChecker.prototype.query = function(letter) {
  * var param_1 = obj.query(letter)
  */
 
-// const test = new StreamChecker(["cd","f","kl"]); // init the dictionary.
-// console.log(test.query('a'));          // return false
-// console.log(test.query('b'));          // return false
-// console.log(test.query('c'));          // return false
-// console.log(test.query('d'));          // return true, because 'cd' is in the wordlist
-// console.log(test.query('e'));          // return false
-// console.log(test.query('f'));          // return true, because 'f' is in the wordlist
-// console.log(test.query('g'));          // return false
-// console.log(test.query('h'));          // return false
-// console.log(test.query('i'));          // return false
-// console.log(test.query('j'));          // return false
-// console.log(test.query('k'));          // return false
-// console.log(test.query('l'));          // return true, because 'kl' is in the wordlist
+const test = new StreamChecker(["cd","f","kl"]); // init the dictionary.
+console.log(test.query('a'));          // return false
+console.log(test.query('b'));          // return false
+console.log(test.query('c'));          // return false
+console.log(test.query('d'));          // return true, because 'cd' is in the wordlist
+console.log(test.query('e'));          // return false
+console.log(test.query('f'));          // return true, because 'f' is in the wordlist
+console.log(test.query('g'));          // return false
+console.log(test.query('h'));          // return false
+console.log(test.query('i'));          // return false
+console.log(test.query('j'));          // return false
+console.log(test.query('k'));          // return false
+console.log(test.query('l'));          // return true, because 'kl' is in the wordlist
