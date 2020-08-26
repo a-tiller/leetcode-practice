@@ -1,31 +1,22 @@
 var mincostTickets = function(days, costs) {
-  const calendar = new Array(days[days.length - 1]).fill(0);
-  let minCost = Infinity;
+  if (!days.length) return 0;
+
+  const calendar = new Array(days[days.length - 1] + 1).fill(0);
+  const mins = new Array(days[days.length - 1] + 1).fill(0);
 
   for (let i = 0; i < days.length; i++) {
     calendar[days[i]] = 1;
   }
 
-  function minLeafCost(cost = 0, index = 0) {
-    if (cost > minCost) return;
-
-    while (index < calendar.length && calendar[index] === 0) {
-      index++;
+  for (let i = 1; i < calendar.length; i++) {
+    if (calendar[i] === 0) {
+      mins[i] = mins[i - 1];
+    } else {
+      mins[i] = Math.min(mins[i - 1] + costs[0], mins[Math.max(0, i - 7)] + costs[1], mins[Math.max(0, i - 30)] + costs[2]);
     }
-
-    if (index >= calendar.length) {
-      minCost = Math.min(minCost, cost);
-      return;
-    }
-
-    minLeafCost(cost + costs[2], index + 30);
-    minLeafCost(cost + costs[1], index + 7);
-    minLeafCost(cost + costs[0], index + 1);
   }
 
-  minLeafCost();
-
-  return minCost;
+  return mins[days[days.length - 1]];
 };
 
 let tdays = [];
