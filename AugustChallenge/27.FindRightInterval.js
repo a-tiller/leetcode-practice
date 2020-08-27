@@ -3,12 +3,17 @@ var findRightInterval = function(intervals) {
   const sortedIndices = new Array(intervals.length).fill(0).map((v, i) => (i)).sort((a, b) => (intervals[a][0] - intervals[b][0]));
 
   for (let i = 0; i < sortedIndices.length; i++) {
-    const end = intervals[sortedIndices[i]][1];
-    for (let j = i + 1; j < sortedIndices.length; j++) {
-      const start = intervals[sortedIndices[j]][0];
-      if (start >= end) {
-        results[sortedIndices[i]] = sortedIndices[j]
-        break;
+    const current = sortedIndices[i];
+    let start = 0;
+    let end = sortedIndices.length - 1;
+
+    while (start <= end) {
+      const mid = Math.floor((start + end) / 2);
+      if (intervals[sortedIndices[mid]][0] >= intervals[current][1]) {
+        results[current] = sortedIndices[mid];
+        end = mid - 1;
+      } else {
+        start = mid + 1;
       }
     }
   }
