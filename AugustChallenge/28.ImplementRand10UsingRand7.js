@@ -1,9 +1,11 @@
 var rand10 = function() {
-  let sum = 0;
+  while (true) {
+    const row = rand7();
+    const col = rand7();
+    const idx = col + (row - 1) * 7;
 
-  for (let i = 0; i < 10; i++) {
-    sum += rand7()
+    if (idx <= 40) {
+      return 1 + (idx - 1) % 10;
+    }
   }
-
-  return sum % 10 + 1;
 };
