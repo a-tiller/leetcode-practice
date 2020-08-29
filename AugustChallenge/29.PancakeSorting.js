@@ -1,27 +1,22 @@
 var pancakeSort = function(A) {
   let results = [];
 
-  function locate(index) {
-    const val = A[index]
-    let bot = 0;
-    let top = index - 1;
-    let candidate = 0;
+  function largestBefore(end) {
+    let index = 0;
+    let val = A[0];
 
-    while (bot <= top) {
-      let mid = Math.floor((bot + top) / 2);
-      if (A[mid] < val) {
-        candidate = mid + 1;
-        bot = mid + 1;
-      } else {
-        top = mid - 1;
+    for (let i = 1; i <= end; i++) {
+      current = A[i];
+      if (current > val) {
+        index = i;
+        val = current;
       }
     }
 
-    return candidate;
+    return index;
   }
 
   function flip(index) {
-    if (index === 0) return;
     results.push(index + 1);
     let bot = 0;
     while (bot < index - bot) {
@@ -30,19 +25,17 @@ var pancakeSort = function(A) {
     }
   }
 
-  for (let i = 1; i < A.length; i++) {
-    const j = locate(i)
+  for (let i = A.length - 1; i > 0; i--) {
+    const j = largestBefore(i)
     if (j === 0) {
-      flip(i - 1);
       flip(i);
     } else if (j < i) {
-      flip(i);
-      flip(i - j);
-      flip(i - j - 1);
+      flip(j);
       flip(i);
     }
   }
 
+  //console.log('A: ', A)
   return results;
 };
 
