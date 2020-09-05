@@ -1,7 +1,7 @@
 var getAllElements = function(root1, root2) {
   const arr1 = [];
   const arr2 = [];
-  let results = [];
+  const results = [];
 
   function inOrder(node, arr) {
     if (!node) return;
@@ -15,12 +15,12 @@ var getAllElements = function(root1, root2) {
 
   while (arr1.length || arr2.length) {
     if (!arr1.length) {
-      results = results.concat(arr2);
+      results.push(...arr2);
       break;
     }
 
     if (!arr2.length) {
-      results = results.concat(arr1);
+      results.push(...arr1);
       break;
     }
 
