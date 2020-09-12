@@ -3,13 +3,13 @@ var combinationSum3 = function(k, n) {
 
   function dfs(start = Math.min(n, 9), tuple = [], prevsum = 0) {
     for (let i = start; i > 0; i--) {
-      const next = [i, ...tuple];
       const sum = prevsum + i;
-
-      if (sum === n && next.length === k) {
-        results.push(next);
-      } else if (sum < n && next.length < k) {
-        dfs(i - 1, next, sum);
+      if (sum === n && tuple.length === k - 1) {
+        results.push([i, ...tuple]);
+      } else if (sum < n && tuple.length < k - 1) {
+        tuple.push(i)
+        dfs(i - 1, tuple, sum);
+        tuple.pop();
       }
     }
   }
