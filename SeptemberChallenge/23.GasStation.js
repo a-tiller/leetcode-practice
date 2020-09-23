@@ -1,6 +1,8 @@
 var canCompleteCircuit = function(gas, cost) {
+
   let minSeen = Infinity;
   let minDex = -1;
+
   let current = 0;
 
   for (let i = 0; i < gas.length; i++) {
@@ -11,6 +13,7 @@ var canCompleteCircuit = function(gas, cost) {
       minDex = i;
     }
   }
+
 
   return current >=0 ? (minDex + 1) % gas.length : -1;
 };
