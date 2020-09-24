@@ -1,18 +1,15 @@
 var findTheDifference = function(s, t) {
-  const tMap = {};
+  let char = 0;
 
   for(let i = 0; i < t.length; i++) {
-    if (!tMap.hasOwnProperty(t[i])) tMap[t[i]] = 1;
-    else tMap[t[i]]++;
+    char ^= t.charCodeAt(i);
   }
 
   for(let i = 0; i < s.length; i++) {
-    tMap[s[i]]--;
+    char ^= s.charCodeAt(i);
   }
 
-  for (const key in tMap) {
-    if (tMap[key]) return key;
-  }
+  return String.fromCharCode(char);
 };
 
 let s = "abcd"
