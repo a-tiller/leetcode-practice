@@ -1,19 +1,13 @@
 var findPoisonedDuration = function(timeSeries, duration) {
   if (!timeSeries.length) return 0;
 
-  const poisoned = new Array(timeSeries[timeSeries.length - 1] + duration + 1).fill(0);
-
-  timeSeries.forEach(time => {
-    for (let i = 0; i < duration; i++) {
-      poisoned[time + i]++;
-    }
-  });
-
   let result = 0;
 
-  poisoned.forEach(time => {
-    if (time) result++;
-  });
+  for (let i = 0; i < timeSeries.length - 1; i++) {
+    result += Math.min(duration, timeSeries[i + 1] - timeSeries[i]);
+  }
+
+  result += duration;
 
   return result;
 };
