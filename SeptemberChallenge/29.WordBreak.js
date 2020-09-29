@@ -3,7 +3,6 @@ var wordBreak = function(s, wordDict) {
     constructor(dictionary = []) {
       this.isWord = false;
       this.letters = {};
-      this.knownBad = new Set();
 
       dictionary.forEach(word => {
         if (!this.parseString(word)) {
@@ -26,24 +25,25 @@ var wordBreak = function(s, wordDict) {
     }
 
     parseString(s) {
-      if (this.knownBad.has(s)) return false;
-
-      let current = this;
+      const dp = new Array(s.length).fill(false);
+      dp.unshift(true);
 
       for (let i = 0; i < s.length; i++) {
-        if (current.isWord) {
-          if (this.parseString(s.slice(i))) return true
-          else this.knownBad.add(s.slice(i));
-        }
-
-        if (current.letters.hasOwnProperty(s[i])) {
-          current = current.letters[s[i]];
-        } else {
-          return false;
+        if (dp[i]) {
+          let pointer = i;
+          let current = this;
+          while (true) {
+            if (current.isWord) dp[pointer] = true;
+            if (current.letters.hasOwnProperty(s[pointer])) {
+              current = current.letters[s[pointer]];
+              pointer++;
+            }
+            else break;
+          }
         }
       }
 
-      return current.isWord;
+      return dp[dp.length - 1];
     }
   }
 
