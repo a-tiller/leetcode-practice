@@ -1,55 +1,15 @@
 var wordBreak = function(s, wordDict) {
-  class trieDict {
-    constructor(dictionary = []) {
-      this.isWord = false;
-      this.letters = {};
+  const dp = new Array(s.length + 1).fill(false);
+  dp[0] = true;
 
-      dictionary.forEach(word => {
-        if (!this.parseString(word)) {
-          this.add(word);
-        }
-      });
-    }
-
-    add(s) {
-      let current = this;
-
-      while (s.length) {
-        if (!current.letters.hasOwnProperty(s[0])) current.letters[s[0]] = new trieDict();
-
-        current = current.letters[s[0]];
-        s.length === 1 ? s = "" : s = s.slice(1);
-      }
-
-      current.isWord = true;
-    }
-
-    parseString(s) {
-      const dp = new Array(s.length).fill(false);
-      dp.unshift(true);
-
-      for (let i = 0; i < s.length; i++) {
-        if (dp[i]) {
-          let pointer = i;
-          let current = this;
-          while (true) {
-            if (current.isWord) dp[pointer] = true;
-            if (current.letters.hasOwnProperty(s[pointer])) {
-              current = current.letters[s[pointer]];
-              pointer++;
-            }
-            else break;
-          }
-        }
-      }
-
-      return dp[dp.length - 1];
-    }
+  for (let i = 0; i < s.length; i++) {
+    if (!dp[i]) continue;
+    wordDict.forEach(word => {
+      if (s.slice(i, i + word.length) === word) dp[i + word.length] = true;
+    });
   }
 
-  let dict = new trieDict(wordDict);
-
-  return dict.parseString(s);
+  return dp[s.length];
 };
 
 let testDict = [];
