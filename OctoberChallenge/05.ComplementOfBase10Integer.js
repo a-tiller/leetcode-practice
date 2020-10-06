@@ -1,17 +1,5 @@
 var bitwiseComplement = function(N) {
-  let pending = 0;
-  let result = 0;
-
-  for (let i = 0; i < 32; i++) {
-    if ((1 << i) & N) {
-      result += pending;
-      pending = 0;
-    } else {
-      pending += 1 << i;
-    }
-  }
-
-  return N ? result : 1;
+  return N ? (Math.pow(2, Math.ceil(Math.log2(N))) - 1) & ~N : 1;
 };
 
 console.log(bitwiseComplement(5)) // 2
