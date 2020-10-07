@@ -2,20 +2,22 @@ var rotateRight = function(head, k) {
   if (!head) return head;
 
   let p = head;
-
-  for (let i = 0; i < k; i++) {
-    p = p.next || head;
-  }
-
-  let split = head;
+  let counter = 1;
 
   while (p.next) {
+    counter++;
     p = p.next;
-    split = split.next;
   }
 
-  const newHead = split.next || head;
   p.next = head;
-  split.next = null;
+
+  let split = (counter - (k % counter) - 1)
+  while (split > 0) {
+    head = head.next;
+    split--;
+  }
+  let newHead = head.next;
+  head.next = null;
+
   return newHead;
 };
