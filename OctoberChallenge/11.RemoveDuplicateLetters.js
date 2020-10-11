@@ -35,7 +35,7 @@ var removeDuplicateLetters = function(s) {
       if (hasLetters(s.slice(candidate)) === sumLetters(remaining)) {
         result += letter;
         pos = candidate + 1;
-        delete letterMap[letter]
+        delete letterMap[letter];
         size--;
         break;
       }
@@ -52,4 +52,4 @@ test = "cbacdcbc"
 console.log(removeDuplicateLetters(test)) // acdb
 
 test = "ecbacba"
-console.log(removeDuplicateLetters(test)) // acdb
+console.log(removeDuplicateLetters(test)) // eacb
