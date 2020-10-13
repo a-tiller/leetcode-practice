@@ -1,35 +1,36 @@
 var sortList = function(head) {
-    if (!head) return head;
+  if (!head || !head.next) return head;
 
-    const pivot = head;
-    let low = null;
-    let high = null;
+  let fast = head.next;
+  let slow = head;
 
-    let current = pivot.next;
+  while(fast && fast.next) {
+    slow = slow.next;
+    fast = fast.next.next;
+  }
 
-    while(current) {
-      const next = current.next;
+  [slow.next, slow] = [null, slow.next];
 
-      if (current.val <= pivot.val) {
-        current.next = low;
-        low = current;
-      } else {
-        current.next = high;
-        high = current;
-      }
-
-      current = next;
-    }
-
-    pivot.next = sortList(high);
-    let newHead = sortList(low)
-    if (!newHead) return pivot;
-
-    current = newHead;
-    while (current.next) {
-      current = current.next;
-    }
-    current.next = pivot;
-
-    return newHead;
+  return merge(sortList(head), sortList(slow));
 };
+
+const merge = (l1, l2) => {
+  const dummy = new ListNode();
+  let curr = dummy;
+
+  while(l1 && l2) {
+    if (l1.val < l2.val) {
+      curr.next = l1;
+      l1 = l1.next;
+    } else {
+      curr.next = l2;
+      l2 = l2.next;
+    }
+
+    curr = curr.next;
+  }
+
+  curr.next = l1 ? l1 : l2;
+
+  return dummy.next;
+}
