@@ -1,47 +1,19 @@
 var minDominoRotations = function(A, B) {
-  const mapA = {};
-  const mapB = {};
+  function countSwaps(arr1, arr2, target) {
+    let counter = 0;
 
-  const TOP = A[0];
-  const BOT = B[0];
-  const possible = [TOP, BOT];
-
-  mapA[TOP] = 1;
-  mapB[TOP] = 0;
-  if (BOT !== TOP) mapA[BOT] = 0;
-  mapB[BOT] = 1;
-
-  for (let i = 1; i < A.length; i++) {
-    const aVal = A[i];
-    const bVal = B[i];
-
-    if (aVal === bVal && possible.length === 2) {
-      aVal === TOP ? possible.pop() : possible.shift();
-    }
-
-    if (possible.includes(aVal)) {
-      mapA[aVal]++;
-    } else if (possible.includes(bVal)) {
-      if (possible.length === 2) {
-        bVal === TOP ? possible.pop() : possible.shift();
+    for (let i = 0; i < arr1.length; i++) {
+      if (arr1[i] !== target) {
+        if (arr2[i] === target) counter++;
+        else return Infinity;
       }
-    } else {
-      return -1;
     }
-
-    if (possible.includes(bVal)) {
-      mapB[bVal]++;
-    } else if (possible.includes(aVal)) {
-      if (possible.length === 2) {
-        aVal === TOP ? possible.pop() : possible.shift();
-      }
-    } else {
-      return -1;
-    }
+    return counter;
   }
 
+  let lowest = Math.min(countSwaps(A, B, A[0]), countSwaps(A, B, B[0]), countSwaps(B, A, A[0]), countSwaps(B, A, B[0]));
 
-  return A.length - Math.max(mapA[TOP], mapA[BOT], mapB[TOP], mapB[BOT]);
+  return lowest === Infinity ? -1 : lowest;
 };
 
 let A = [];
