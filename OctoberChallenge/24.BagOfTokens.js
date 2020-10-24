@@ -1,23 +1,21 @@
 var bagOfTokensScore = function(tokens, P) {
-
-  let maxScore = 0;
-  let score = 0;
+  let [s, l, r] = [0, 0, tokens.length - 1];
 
   tokens.sort((a, b) => (a - b));
 
-  while (tokens.length) {
-    while (tokens[0] <= P) {
-      P -= tokens.shift();
-      score += 1
+  while (true) {
+    if (tokens[l] <= P) {
+      P -= tokens[l]
+      s++;
+      l++;
+    } else if (s > 0 && l < r) {
+      P += tokens[r];
+      s--;
+      r--;
+    } else {
+      break;
     }
-
-    maxScore = Math.max(maxScore, score);
-
-    if (!score) break;
-
-    P += tokens.pop()
-    score--;
   }
 
-  return maxScore;
+  return s;
 };
