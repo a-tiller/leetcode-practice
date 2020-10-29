@@ -1,25 +1,18 @@
 var maxDistToClosest = function(seats) {
-  let result = 0;
-  let outermost = !seats[0];
   let counter = 0;
+  let i = 0;
 
-  for (let i = 0; i < seats.length; i++) {
+  for ( ; !seats[i]; i++) counter++
+  let result = counter;
+
+  for ( ; i < seats.length; i++, counter++) {
     if (seats[i]) {
-      if (outermost) {
-        result = counter;
-        outermost = false;
-      } else {
-        result = Math.max(result, Math.floor(counter / 2) + (counter % 2));
-      }
-      counter = 0;
-    } else {
-      counter++
+      result = Math.max(result, Math.floor((counter + 1) / 2));
+      counter = -1;
     }
   }
 
-  if (!seats[seats.length - 1]) result = Math.max(result, counter);
-
-  return result;
+  return Math.max(result, counter);
 };
 
 let test = [1,0,0,0,1,0,1];
