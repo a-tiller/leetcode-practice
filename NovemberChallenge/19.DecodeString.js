@@ -1,28 +1,36 @@
 var decodeString = function(s) {
-  let position = 0;
-  let numLength = 0;
+  const stack = [];
 
-  while (position < s.length) {
-    if (+s[position] >= 0 && +s[position] < 10) numLength++;
+  for (let i = 0; i < s.length; i++) {
+    const char = s[i]
 
-    if (s[position] === '[') {
-      let repeatValue = +s.slice(position - numLength, position);
-      let startOfEncodedBlock = position++;
-      let bracketCounter = 1;
-
-      while (bracketCounter) {
-        if (s[position] === '[') bracketCounter++;
-        else if (s[position] === ']') bracketCounter--;
-        position++;
-      }
-
-      return s.slice(0, startOfEncodedBlock - 1 - numLength)
-        + decodeString(s.slice(startOfEncodedBlock, position - 1)).repeat(repeatValue)
-        + decodeString(s.slice(position));
+    if (char !== ']') {
+      stack.push(char);
+      continue;
     }
 
-    position++
+    const reversedSubstring = [];
+    while (stack[stack.length - 1] !== '[') {
+      reversedSubstring.push(stack.pop());
+    }
+
+    // removes trailing [
+    stack.pop();
+
+    const reversedNumber = [];
+    while(isDigit(stack[stack.length - 1])) {
+      reversedNumber.push(stack.pop());
+    }
+
+    const repeatValue = reversedNumber.reverse().join('');
+    const repeatableSubstring = reversedSubstring.reverse().join('');
+
+    stack.push(...repeatableSubstring.repeat(repeatValue).split(''));
   }
 
-  return s;
+  return stack.join('');
 };
+
+function isDigit(char) {
+  return /\d/.test(char)
+}
